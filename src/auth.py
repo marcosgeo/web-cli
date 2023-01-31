@@ -10,7 +10,7 @@ STATIC_TOKEN = "IxJCjdax$qbe8xD"
 class TokenMiddleware(Middleware):
     _regex = re.compile(r"^Token: (\w+)$")
 
-    def process_request(self, req)
+    def process_request(self, req):
         header = req.headers.get("Authorization", "")
         match = self._regex.match(header)
         token = match and match.group(1) or None
