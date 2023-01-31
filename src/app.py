@@ -2,6 +2,7 @@
 
 from bumbo.api import API
 
+from .auth import STATIC_TOKEN
 from .storage import BookStorage
 
 
@@ -14,4 +15,9 @@ book_storage.create(name="7 habits of highly effective people", author="Stephen 
 def index(req, resp):
     books = book_storage.all()
     resp.html = app.template("index.html", context={"books": books})
+
+
+@app.route("/login", allowed_methods=["post"])
+def login(req, resp):
+    resp.json= {"token": STATIC_TOKEN}
 
