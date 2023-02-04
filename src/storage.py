@@ -13,7 +13,7 @@ class BookStorage:
         return [book._asdict() for book in self._books]
 
     def get(self, id: int):
-        for book in books:
+        for book in self._books:
             if book.id == id:
                 return book
         return None
