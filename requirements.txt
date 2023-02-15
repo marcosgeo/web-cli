@@ -1,2 +1,2 @@
 gunicorn==20.1.0
-marcosgeo-bumbo==0.0.4
+marcosgeo-bumbo==0.0.7

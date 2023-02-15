@@ -1,12 +1,8 @@
 # models.py
 
-from typing import NamedTuple
+from bumbo.orm import Table, Column
 
-
-class Book(NamedTuple):
-    id: int
-    name: int
-    author: str
-
-
+class Book(Table):
+    author = Column(str)
+    name = Column(str)
 

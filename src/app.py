@@ -1,20 +1,24 @@
 # app.py
 
 from bumbo.api import API
-from .auth import login_required, TokenMiddleware, STATIC_TOKEN, on_exception
-from .storage import BookStorage
+from bumbo.orm import Database
 
+from .auth import login_required, TokenMiddleware, STATIC_TOKEN, on_exception
+from .models import Book
+from .storage import BookStorage
 
 app = API(templates_dir="src/templates", static_dir="src/static")
 app.add_middleware(TokenMiddleware)
 app.add_exception_handler(on_exception)
 book_storage = BookStorage()
 book_storage.create(name="7 habits of highly effective people", author="Stephen Covey")
+db = Database("./myapp.db")
+db.create(Book)
 
 
 @app.route("/", allowed_methods=["get"])
 def index(req, resp):
-    books = book_storage.all()
+    books = db.all(Book)
     resp.html = app.template("index.html", context={"books": books})
 
 
@@ -28,16 +32,17 @@ def login(req, resp):
 @login_required
 def create_book(req, resp):
     print(f"..:: POST /books ::..\nreq{req}\nresp: {resp}\n")
-    book = book_storage.create(**req.POST)
+    book = Book(**req.POST)
+    db.save(book)
 
     resp.status_code = 201
-    resp.json = book._asdict()
+    resp.json = {"name": book.name, "author": book.author}
 
 
 @app.route("/books/{id:d}", allowed_methods=["delete"])
 @login_required
 def delete_book(req, resp, id):
-    book_storage.delete(id)
+    db.delete(Book, id)
 
     resp.status_code = 204
 
